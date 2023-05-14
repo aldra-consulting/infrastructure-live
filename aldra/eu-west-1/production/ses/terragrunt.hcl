@@ -1,5 +1,5 @@
 terraform {
-  source = "git@github.com:finando/infrastructure-modules.git///packages/ses?ref=ses@0.1.0"
+  source = "git@github.com:finando/infrastructure-modules.git///packages/ses?ref=ses@0.3.0"
 }
 
 include {
@@ -20,4 +20,5 @@ inputs = {
   environment = local.environment
 
   ssm_parameter_ses_configuration = "ses-configuration"
+  ssm_parameter_ses_smtp_users    = "ses-smtp-users"
 }
