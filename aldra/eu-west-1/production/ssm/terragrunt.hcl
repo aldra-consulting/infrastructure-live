@@ -1,5 +1,5 @@
 terraform {
-  source = "git@github.com:finando/infrastructure-modules.git///packages/ssm?ref=ssm@0.1.0"
+  source = "git@github.com:finando/infrastructure-modules.git///packages/ssm?ref=ssm@0.2.0"
 }
 
 include {
