@@ -1,5 +1,5 @@
 terraform {
-  source = "git@github.com:aldra-consulting/infrastructure-modules.git//packages/route-53?ref=route-53@0.1.0"
+  source = "git@github.com:aldra-consulting/infrastructure-modules.git//packages/route-53?ref=route-53@0.2.0"
 }
 
 include {
@@ -11,6 +11,8 @@ locals {
   account     = yamldecode(file(find_in_parent_folders("account.yml")))
   region      = yamldecode(file(find_in_parent_folders("region.yml")))
   environment = yamldecode(file(find_in_parent_folders("environment.yml")))
+  namespace   = "${local.common.project.name}-${local.region.name}-${local.environment.name}"
+  tags        = merge(local.account.tags, local.region.tags, local.environment.tags)
 }
 
 inputs = {
@@ -18,4 +20,6 @@ inputs = {
   account     = local.account
   region      = local.region
   environment = local.environment
+  namespace   = local.namespace
+  tags        = local.tags
 }
