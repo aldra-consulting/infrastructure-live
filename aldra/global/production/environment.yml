@@ -1,4 +1,7 @@
 name: production
 
+project:
+  domain_name: aldra.no
+
 tags:
   Environment: production
