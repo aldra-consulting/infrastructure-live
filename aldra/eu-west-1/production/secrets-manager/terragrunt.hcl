@@ -1,5 +1,5 @@
 terraform {
-  source = "git@github.com:aldra-consulting/infrastructure-modules.git//packages/secrets-manager?ref=secrets-manager@0.1.0"
+  source = "git@github.com:aldra-consulting/infrastructure-modules.git//packages/secrets-manager?ref=secrets-manager@0.2.0"
 }
 
 include {
