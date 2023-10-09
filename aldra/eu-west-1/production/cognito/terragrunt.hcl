@@ -1,6 +1,5 @@
 terraform {
-  source = "git@github.com:aldra-consulting/infrastructure-modules.git//packages/cognito?ref=cognito@0.1.0"
-  # source = "../../../../../infrastructure-modules/packages/cognito"
+  source = "git@github.com:aldra-consulting/infrastructure-modules.git//packages/cognito?ref=cognito@0.2.0"
 }
 
 include {
