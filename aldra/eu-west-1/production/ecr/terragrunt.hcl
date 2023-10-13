@@ -1,5 +1,5 @@
 terraform {
-  source = "git@github.com:aldra-consulting/infrastructure-modules.git//packages/ecr?ref=ecr@0.1.3"
+  source = "git@github.com:aldra-consulting/infrastructure-modules.git//packages/ecr?ref=ecr@0.1.4"
 }
 
 include {
