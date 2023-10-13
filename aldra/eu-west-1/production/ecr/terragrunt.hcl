@@ -24,6 +24,8 @@ inputs = {
   tags        = local.tags
 
   repositories = toset([
-    "auth-rest-api"
+    "auth-rest-api",
+    "auth-rest-api-app",
+    "auth-rest-api-sidecar",
   ])
 }
