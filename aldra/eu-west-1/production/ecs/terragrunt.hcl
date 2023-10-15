@@ -1,5 +1,5 @@
 terraform {
-  source = "git@github.com:aldra-consulting/infrastructure-modules.git//packages/ecs?ref=ecs@0.4.0"
+  source = "git@github.com:aldra-consulting/infrastructure-modules.git//packages/ecs?ref=ecs@0.5.0"
 }
 
 dependency "vpc" {
@@ -16,6 +16,10 @@ dependency "dynamodb" {
 
 dependency "secrets_manager" {
   config_path = "../secrets-manager"
+}
+
+dependency "ecr" {
+  config_path = "../ecr"
 }
 
 include {
@@ -47,23 +51,41 @@ inputs = {
 
   services = [
     {
-      name   = "auth-rest-api"
-      port   = 8000
-      cpu    = 512
-      memory = 1024
-      environment = {
-        NODE_ENV                        = local.environment.name
-        HOST                            = "0.0.0.0"
-        PORT                            = "8000"
-        ISSUER                          = "https://id.${local.environment.project.domain_name}"
-        REALM                           = "aldra"
-        AWS_REGION                      = local.region.name
-        AWS_COGNITO_USER_POOL_ID        = dependency.cognito.outputs.user_pool_id
-        AWS_COGNITO_USER_POOL_CLIENT_ID = dependency.cognito.outputs.user_pool_client_id
-        AWS_SECRET_ARN_OIDC_COOKIE_KEYS = dependency.secrets_manager.outputs.secret_arn["oidc-cookie-keys"]
-        AWS_SECRET_ARN_OIDC_JWKS        = dependency.secrets_manager.outputs.secret_arn["oidc-jwks"]
-        OIDC_PROVIDER_DB_TABLE          = dependency.dynamodb.outputs.oidc_provider_dynamodb_table_id
-        AUTH_INTERACTIONS_URL           = "https://id.${local.environment.project.domain_name}/interactions"
+      name    = "auth-rest-api"
+      ingress = "sidecar"
+      port    = 8001
+      cpu     = 512
+      memory  = 1024
+      container_definitions = {
+        sidecar = {
+          image                    = "${dependency.ecr.outputs.repository_url["auth-rest-api-sidecar"]}@${dependency.ecr.outputs.latest_image_tag_id["auth-rest-api-sidecar"]}"
+          container_port           = 8001
+          host_port                = 8001
+          cpu                      = 256
+          memory                   = 512
+          readonly_root_filesystem = false
+        }
+        app = {
+          image          = "${dependency.ecr.outputs.repository_url["auth-rest-api-app"]}@${dependency.ecr.outputs.latest_image_tag_id["auth-rest-api-app"]}"
+          container_port = 8000
+          host_port      = 8000
+          cpu            = 256
+          memory         = 512
+          environment = {
+            NODE_ENV                        = local.environment.name
+            HOST                            = "0.0.0.0"
+            PORT                            = "8000"
+            ISSUER                          = "https://www.id.${local.environment.project.domain_name}"
+            REALM                           = "aldra"
+            AWS_REGION                      = local.region.name
+            AWS_COGNITO_USER_POOL_ID        = dependency.cognito.outputs.user_pool_id
+            AWS_COGNITO_USER_POOL_CLIENT_ID = dependency.cognito.outputs.user_pool_client_id
+            AWS_SECRET_ARN_OIDC_COOKIE_KEYS = dependency.secrets_manager.outputs.secret_arn["oidc-cookie-keys"]
+            AWS_SECRET_ARN_OIDC_JWKS        = dependency.secrets_manager.outputs.secret_arn["oidc-jwks"]
+            OIDC_PROVIDER_DB_TABLE          = dependency.dynamodb.outputs.oidc_provider_dynamodb_table_id
+            AUTH_INTERACTIONS_URL           = "https://www.id.${local.environment.project.domain_name}/interactions"
+          }
+        }
       }
       task_iam_policy_statements = {
         "dynamodb" = {
