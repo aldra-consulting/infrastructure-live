@@ -115,6 +115,9 @@ inputs = {
           actions = [
             "cognito-idp:AdminInitiateAuth",
             "cognito-idp:AdminGetUser",
+            "cognito-idp:ConfirmSignUp",
+            "cognito-idp:ListUsers",
+            "cognito-idp:ResendConfirmationCode",
           ]
           resources = [
             dependency.cognito.outputs.user_pool_arn,
