@@ -1,5 +1,5 @@
 terraform {
-  source = "git@github.com:aldra-consulting/infrastructure-modules.git//packages/vpc?ref=vpc@0.4.0"
+  source = "git@github.com:aldra-consulting/infrastructure-modules.git//packages/vpc?ref=vpc@0.6.0"
 }
 
 include {
