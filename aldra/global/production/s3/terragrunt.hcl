@@ -25,6 +25,9 @@ inputs = {
 
   s3_buckets = [
     {
+      name = "landing-page-web"
+    },
+    {
       name = "sso-web"
     },
   ]
