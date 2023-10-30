@@ -83,7 +83,9 @@ inputs = {
             AWS_SECRET_ARN_OIDC_COOKIE_KEYS = dependency.secrets_manager.outputs.secret_arn["oidc-cookie-keys"]
             AWS_SECRET_ARN_OIDC_JWKS        = dependency.secrets_manager.outputs.secret_arn["oidc-jwks"]
             OIDC_PROVIDER_DB_TABLE          = dependency.dynamodb.outputs.oidc_provider_dynamodb_table_id
+            COOKIE_DOMAIN_NAME              = local.environment.project.domain_name
             AUTH_INTERACTIONS_URL           = "https://www.id.${local.environment.project.domain_name}/interactions"
+            NPM_CONFIG_UPDATE_NOTIFIER      = false
           }
         }
       }
