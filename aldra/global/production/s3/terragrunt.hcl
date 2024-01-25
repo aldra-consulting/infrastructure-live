@@ -30,5 +30,8 @@ inputs = {
     {
       name = "sso-web"
     },
+    {
+      name = "platform-web"
+    },
   ]
 }
