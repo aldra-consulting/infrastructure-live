@@ -124,5 +124,42 @@ inputs = {
         }
       ]
     },
+    {
+      name        = "platform"
+      domain_name = "platform.${local.environment.project.domain_name}"
+      cache_behaviours = [
+        {
+          path             = "/build/*"
+          type             = "S3"
+          target_origin_id = dependency.s3.outputs.s3_bucket_id["platform-web"]
+        },
+        {
+          type                = "S3"
+          disable_cache       = true
+          rewrite_request_url = true
+          target_origin_id    = dependency.s3.outputs.s3_bucket_id["platform-web"]
+        },
+      ]
+      s3_origins = [
+        {
+          id            = dependency.s3.outputs.s3_bucket_id["platform-web"]
+          domain_name   = dependency.s3.outputs.s3_bucket_regional_domain_name["platform-web"]
+          s3_bucket_id  = dependency.s3.outputs.s3_bucket_id["platform-web"]
+          s3_bucket_arn = dependency.s3.outputs.s3_bucket_arn["platform-web"]
+        },
+      ]
+      custom_error_response = [
+        {
+          error_code         = 404
+          response_code      = 200
+          response_page_path = "/redirect.html"
+        },
+        {
+          error_code         = 403
+          response_code      = 200
+          response_page_path = "/redirect.html"
+        }
+      ]
+    },
   ]
 }
