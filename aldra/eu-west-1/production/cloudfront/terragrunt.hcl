@@ -7,7 +7,7 @@ dependency "api_gateway" {
 }
 
 dependency "s3" {
-  config_path = "../../..//global/production/s3"
+  config_path = "../../../global/production/s3"
 }
 
 include {
@@ -158,6 +158,43 @@ inputs = {
           error_code         = 403
           response_code      = 200
           response_page_path = "/redirect.html"
+        }
+      ]
+    },
+    {
+      name        = "sanity-studio"
+      domain_name = "studio.${local.environment.project.domain_name}"
+      cache_behaviours = [
+        {
+          path             = "/static/*"
+          type             = "S3"
+          target_origin_id = dependency.s3.outputs.s3_bucket_id["sanity-studio-web"]
+        },
+        {
+          type                = "S3"
+          disable_cache       = true
+          rewrite_request_url = true
+          target_origin_id    = dependency.s3.outputs.s3_bucket_id["sanity-studio-web"]
+        },
+      ]
+      s3_origins = [
+        {
+          id            = dependency.s3.outputs.s3_bucket_id["sanity-studio-web"]
+          domain_name   = dependency.s3.outputs.s3_bucket_regional_domain_name["sanity-studio-web"]
+          s3_bucket_id  = dependency.s3.outputs.s3_bucket_id["sanity-studio-web"]
+          s3_bucket_arn = dependency.s3.outputs.s3_bucket_arn["sanity-studio-web"]
+        },
+      ]
+      custom_error_response = [
+        {
+          error_code         = 404
+          response_code      = 200
+          response_page_path = "/index.html"
+        },
+        {
+          error_code         = 403
+          response_code      = 200
+          response_page_path = "/index.html"
         }
       ]
     },
