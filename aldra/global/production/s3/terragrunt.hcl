@@ -33,5 +33,8 @@ inputs = {
     {
       name = "platform-web"
     },
+    {
+      name = "sanity-studio-web"
+    },
   ]
 }
